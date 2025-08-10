@@ -41,9 +41,9 @@
     // Functions ---
 
     /*
-    Purpose: Fetches a clothing id from closet_list.db
+    Purpose: Fetches a clothing from closet_list.db
     Input: clothingType,Weather(temp of user)
-    Return: clothing id object
+    Return: clothing object data
     */
     async function fetchClothing(clothingType,weather){
       if (debug) {console.log(`Entering fetchClothing with ${clothingType} & ${weather}`)}
@@ -73,7 +73,9 @@
         } else if (response.error){
           console.log("Error from backend:",response.error)
         }
+
         mannequinOutfit[piece].id = response.id;
+        mannequinOutfit[piece].path = response.path;
         if (debug) {console.log(`updated Mannequin Out with ${piece}:${mannequinOutfit[piece].id}`);}
       }
     }
@@ -85,9 +87,14 @@
     */
     function updateOutfitImage(){
       console.log("mannequinnOutift:",mannequinOutfit)
-      for (const piece of Object.keys(mannequinOutfit)){
-        document.getElementById(piece).innerHTML = mannequinOutfit[piece].id;
+      try {      
+        for (const piece of Object.keys(mannequinOutfit)){
+          document.getElementById(piece).innerHTML = mannequinOutfit[piece].path;
+        }
+      } catch{
+        console.log("error dressing mannequinn")
       }
+
     }
   
   </script>

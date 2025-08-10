@@ -27,8 +27,8 @@ def search_clothing():
         if not result:
             return jsonify({"error" : "no clothing found"})
         clothing_id, clothing_path = result
-        print(f"Id: {clothing_id}")
-        return jsonify({"id": clothing_id})
+        print(f"Id: {clothing_id} | Path: {clothing_path}")
+        return jsonify({"id": clothing_id,"path": clothing_path})
     except Exception as e:
         return jsonify({"error": "error searching closet_list.db"})
     
