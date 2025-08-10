@@ -5,9 +5,13 @@
 </head>
 <body>
 
+  <input id="accessoryBtn" type="checkbox" value="addAccessory"/>
+  <label for="accessoryBtn">Accessory?</label>
   <button id="createBtn" type="button">Create!</button>
-  <img id="top" width="100px" height="100px">
-  <img id="bottom" width="100px" height="100px">
+  <br><br>
+  <img id="top" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
+  <img id="bottom" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
+  <img id="accessory" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
 
   <script>
     const debug = 1;
@@ -24,21 +28,20 @@
       constructor({top=null, bottom=null, accessory=null} = {}){
         this.top = top; 
         this.bottom = bottom;
-        //this.accessory = accessory;
+        this.accessory = accessory;
         }
     }
 
     // Global Variables ---
-    const topClothing = new Clothing({type:"top"});
-    const bottomClothing = new Clothing({type:"bottom"});
-    var mannequinOutfit = new Outfit({top:topClothing,bottom:bottomClothing});
+    var mannequinOutfit = new Outfit();
     const createBtn = document.getElementById("createBtn");
 
     // Methods ---    
     createBtn.addEventListener("click",async () => {
-      await updateManOutfit(); updateOutfitImage();});
+      await updateMannequinOutfit(); updateOutfitImage();});
 
     // Functions ---
+
 
     /*
     Purpose: Fetches a clothing from closet_list.db
@@ -61,38 +64,66 @@
     }
 
     /*
-    Purpose: Updates mannequin outfit with new pieces according to the weather
+    Purpose: Creates an outfit according to the weather & accessory choice
     Input: Weather(temp of user,string)
     Return: VOID
     */
-    async function updateManOutfit(weather) {
-      for (const piece of Object.keys(mannequinOutfit)) {
-        let response = await fetchClothing(piece,"cold");
+    async function createOutfit(weather){
+      const outfit = new Outfit();
+      isAccessoryActive = document.getElementById("accessoryBtn").checked;
+
+      for (const clothingType of Object.keys(outfit)) {
+        if (!isAccessoryActive && clothingType === "accessory") {continue;} 
+        const clothingWeather = (isAccessoryActive && clothingType === "accessory") ? "all" : weather;
+        const response = await fetchClothing(clothingType,clothingWeather);
         if (!response){
-          console.log(`No data returned from fetchClothing(${clothingType},"hot")`);
+          console.log(`No data returned from fetchClothing(${clothingType},${clothingWeather})`);
         } else if (response.error){
           console.log("Error from backend:",response.error)
         }
 
-        mannequinOutfit[piece].id = response.id;
-        mannequinOutfit[piece].name = response.name;
-        mannequinOutfit[piece].path = response.path;
-
-        if (debug) {console.log(`updated Mannequin Out with ${piece}:${mannequinOutfit[piece].id}`);}
+       outfit[clothingType] = new Clothing({
+        id:response.id,
+        name:response.name,
+        type:clothingType,
+        weather:clothingWeather,
+        path:response.path})
       }
+
+      if (debug) console.log("Created outfit:",outfit)
+      return outfit;
     }
 
     /*
-    Purpose: Updates mannequinn images to reflect mannequinnOutfit piece
+    Purpose: Updates mannequin outfit with new pieces according to the weather
+    Input: Weather(temp of user,string)
+    Return: VOID
+    */
+    async function updateMannequinOutfit(weather) {
+      mannequinOutfit = await createOutfit("hot")
+      if (debug) console.log("Dressed mannequin:",mannequinOutfit)
+    }
+
+    /*
+    Purpose: Updates mannequinn images to reflect mannequinnOutfit.
     Input: NONE
     Return: VOID
     */
-    function updateOutfitImage(){
-      console.log("mannequinnOutift:",mannequinOutfit)    
-      for (const piece of Object.keys(mannequinOutfit)){
-        fullpath = "/static/" +  mannequinOutfit[piece].path;
-        document.getElementById(piece).src = fullpath;
-        document.getElementById(piece).alt = mannequinOutfit[piece].name;
+    function updateOutfitImage(){   
+      for (const clothingType of Object.keys(mannequinOutfit)){ 
+        const element = document.getElementById(clothingType);
+        if (!element) {continue;}
+        
+        const item = mannequinOutfit[clothingType];
+
+        if (item && item.path) {
+          element.src = "/static/" +  item.path;
+          element.alt = item.name;
+          if (debug) {console.log("Image Mannequinn:",clothingType)}
+          continue;
+        }
+        element.src = "/static/imgs/Placeholders/blank.png";
+        element.alt = "blank"
       }
     }
   

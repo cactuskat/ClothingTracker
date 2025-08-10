@@ -23,7 +23,6 @@ def search_clothing():
         conn.close()
 
         print(f"Query result: {result}")
-        #print("hello world")
         if not result:
             return jsonify({"error" : "no clothing found"})
         clothing_id, clothing_name,clothing_path = result
