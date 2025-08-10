@@ -10,36 +10,74 @@
   <p id="bottom"></p>
 
   <script>
+    const debug = 1;
     // Classes ---
     class Outfit {
       constructor(top, bottom, accessory){
         this.top = top; 
         this.bottom = bottom;
-        this.accessory = accessory;
-      }
+        //this.accessory = accessory;
+        }
       updateItem(type, id) {
-        this[type] = id;
-      }
+        this[type] = id;}
     }
 
     // Global Variables ---
     const outfit = new Outfit;
-    const createBtn = document.getElementById("createBtn")
+    const createBtn = document.getElementById("createBtn");
 
     // Methods ---    
     createBtn.addEventListener("click",updateOutfit)
-    createBtn.addEventListener("click",updateOutfitImage)
+    //createBtn.addEventListener("click",updateOutfitImage)
 
-    // Function ---
+    // Functions ---
+
+    async function fetchClothing(clothingType,weather){
+      if (debug) {console.log(`Entering fetchClothing with ${clothingType} & ${weather}`)}
+      try {
+        const response = await fetch(`/clothing/search?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
+        if (!response.ok) {
+          throw new Error(`Fetch error: ${response.status}`);
+        }
+        const result = await response.json();
+        if (debug) {console.log('Parsed JSON data:',result);}
+        return result;
+      } catch (error) {
+        console.error(error.message);
+        return null;}
+    }
+
     /*
-    Purpose: Selects an article from the database accoriding to the weather
+    Purpose: Selects a clothing from the database accoriding to the weather
       & updates the id
-    Input: Article (prop of outfit), Weather (temp of user)
+    Input: Clothing (item of outfit), Weather (temp of user)
     Return: VOID
     */
-    function updateArticle(article,weather) {
-      outfit.updateItem(article,article)
+    async function updateClothing(clothingType,weather) {
+      const response = await fetchClothing(clothingType,weather);
+      if(debug) console.log("REsulttts:",response.id)
     }
+
+      /*
+      console.log("hello world")
+      if (data && data.id){
+        console.log("Clothing found")
+        //outfit.updateItem(clothingType,data.id);
+      } else if (data && data.error) {
+        console.log("Error from backend:", data.error);
+      } else if (!data) {
+        console.log("No data returned from fetchClothing");
+      } else {
+        console.log(":(")
+      } */
+      //outfit.updateItem(clothingType,clothingType)
+      // Assuming data is an array and we want the first item
+      //console.log(data[0]); 
+      //if (data && data.id) {
+      //  outfit.updateItem(clothingType,data.id)
+      //} else {
+      //  console.log("No clothing found or error")
+      //}
 
     /*
     Purpose: Updates outfit with new articles according to the weather
@@ -47,9 +85,9 @@
     Return: VOID
     */
     async function updateOutfit(weather) {
-      Object.keys(outfit).forEach(article => {
-        updateArticle(article,"hot")
-      })
+      if (debug) {console.log("entered updateOufit")}
+      Object.keys(outfit).forEach(clothing => {
+        updateClothing(clothing,"hot");});
     }
 
     /*
@@ -57,11 +95,11 @@
     Input: NONE
     Return: VOID
     */
-    function updateOutfitImage(){
-      Object.keys(outfit).forEach(article => {
-        document.getElementById(article).innerHTML = article
-      })
-    }
+    //function updateOutfitImage(){
+    //  Object.keys(outfit).forEach(clothing => {
+    //    document.getElementById(clothing).innerHTML = ?;
+    //  });
+    //}
   
   </script>
 </body>
