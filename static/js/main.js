@@ -1,5 +1,5 @@
-const createBtn = document.getElementById("createBtn")
-createBtn.addEventListener("click",createOutfit)
+//const createBtn = document.getElementById("createBtn")
+//createBtn.addEventListener("click",createOutfit)
 
 
 
