@@ -12,23 +12,32 @@
   <script>
     const debug = 1;
     // Classes ---
+    class Clothing {
+      constructor({id=null,name=null,type=null,weather=null,path=null} = {}){
+        this.id = id;
+        this.name = null;
+        this.type = type;
+        this.weather = weather;
+        this.path = path;}
+    }
     class Outfit {
-      constructor(top, bottom, accessory){
+      constructor({top=null, bottom=null, accessory=null} = {}){
         this.top = top; 
         this.bottom = bottom;
         //this.accessory = accessory;
         }
-      updateItem(type, id) {
-        this[type] = id;}
     }
 
     // Global Variables ---
-    const outfit = new Outfit;
+    const topPiece = new Clothing({type:"top"});
+    const bottomPiece = new Clothing({type:"bottom"});
+    //const accessory = new Clothing({type:accessory});
+    var outfit = new Outfit({top : topPiece,bottom : bottomPiece});
     const createBtn = document.getElementById("createBtn");
 
     // Methods ---    
     createBtn.addEventListener("click",updateOutfit)
-    //createBtn.addEventListener("click",updateOutfitImage)
+    createBtn.addEventListener("click",updateOutfitImage)
 
     // Functions ---
 
@@ -48,13 +57,19 @@
     }
 
     /*
-    Purpose: Selects a clothing from the database accoriding to the weather
-      & updates the id
+    Purpose: Selects a piece from the closet database according to the weather
     Input: Clothing (item of outfit), Weather (temp of user)
     Return: VOID
     */
     async function updateClothing(clothingType,weather) {
       const response = await fetchClothing(clothingType,weather);
+      if (!response){
+        console.log(`No data returned from fetchClothing(${clothingType},${weather})`);
+      } else if (response.error){
+        console.log("Error from backend:",data.error)
+      }
+      outfit[clothingType].id = response.id;
+
       if(debug) console.log("REsulttts:",response.id)
     }
 
@@ -80,26 +95,33 @@
       //}
 
     /*
-    Purpose: Updates outfit with new articles according to the weather
+    Purpose: Updates outfit with new pieces according to the weather
     Input: Weather(temp of user)
     Return: VOID
     */
     async function updateOutfit(weather) {
       if (debug) {console.log("entered updateOufit")}
-      Object.keys(outfit).forEach(clothing => {
-        updateClothing(clothing,"hot");});
+      Object.keys(outfit).forEach(piece => {
+        updateClothing(piece,"hot");});
     }
 
     /*
-    Purpose: Updates images to reflect current outfit articles
+    Purpose: Updates images to reflect current outfit piece
     Input: NONE
     Return: VOID
     */
-    //function updateOutfitImage(){
-    //  Object.keys(outfit).forEach(clothing => {
-    //    document.getElementById(clothing).innerHTML = ?;
-    //  });
-    //}
+    function updateOutfitImage(){
+      Object.keys(outfit).forEach(piece => {
+        const clothingItem = outfit[piece];
+        const element = document.getElementById(piece);
+
+        if (clothingItem && clothingItem.path) {
+          element.innerHTML = "image!";
+        } else {
+          element.innerHTML = "(no image)";
+        }
+      });
+    }
   
   </script>
 </body>
