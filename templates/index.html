@@ -29,18 +29,22 @@
     }
 
     // Global Variables ---
-    const topPiece = new Clothing({type:"top"});
-    const bottomPiece = new Clothing({type:"bottom"});
-    //const accessory = new Clothing({type:accessory});
-    var outfit = new Outfit({top : topPiece,bottom : bottomPiece});
+    const topClothing = new Clothing({type:"top"});
+    const bottomClothing = new Clothing({type:"bottom"});
+    var mannequinOutfit = new Outfit({top:topClothing,bottom:bottomClothing});
     const createBtn = document.getElementById("createBtn");
 
     // Methods ---    
-    createBtn.addEventListener("click",updateOutfit)
-    createBtn.addEventListener("click",updateOutfitImage)
+    createBtn.addEventListener("click",async () => {
+      await updateManOutfit(); updateOutfitImage();});
 
     // Functions ---
 
+    /*
+    Purpose: Fetches a clothing id from closet_list.db
+    Input: clothingType,Weather(temp of user)
+    Return: clothing id object
+    */
     async function fetchClothing(clothingType,weather){
       if (debug) {console.log(`Entering fetchClothing with ${clothingType} & ${weather}`)}
       try {
@@ -57,70 +61,33 @@
     }
 
     /*
-    Purpose: Selects a piece from the closet database according to the weather
-    Input: Clothing (item of outfit), Weather (temp of user)
+    Purpose: Updates mannequin outfit with new pieces according to the weather
+    Input: Weather(temp of user,string)
     Return: VOID
     */
-    async function updateClothing(clothingType,weather) {
-      const response = await fetchClothing(clothingType,weather);
-      if (!response){
-        console.log(`No data returned from fetchClothing(${clothingType},${weather})`);
-      } else if (response.error){
-        console.log("Error from backend:",data.error)
+    async function updateManOutfit(weather) {
+      for (const piece of Object.keys(mannequinOutfit)) {
+        let response = await fetchClothing(piece,"hot");
+        if (!response){
+          console.log(`No data returned from fetchClothing(${clothingType},"hot")`);
+        } else if (response.error){
+          console.log("Error from backend:",response.error)
+        }
+        mannequinOutfit[piece].id = response.id;
+        if (debug) {console.log(`updated Mannequin Out with ${piece}:${mannequinOutfit[piece].id}`);}
       }
-      outfit[clothingType].id = response.id;
-
-      if(debug) console.log("REsulttts:",response.id)
-    }
-
-      /*
-      console.log("hello world")
-      if (data && data.id){
-        console.log("Clothing found")
-        //outfit.updateItem(clothingType,data.id);
-      } else if (data && data.error) {
-        console.log("Error from backend:", data.error);
-      } else if (!data) {
-        console.log("No data returned from fetchClothing");
-      } else {
-        console.log(":(")
-      } */
-      //outfit.updateItem(clothingType,clothingType)
-      // Assuming data is an array and we want the first item
-      //console.log(data[0]); 
-      //if (data && data.id) {
-      //  outfit.updateItem(clothingType,data.id)
-      //} else {
-      //  console.log("No clothing found or error")
-      //}
-
-    /*
-    Purpose: Updates outfit with new pieces according to the weather
-    Input: Weather(temp of user)
-    Return: VOID
-    */
-    async function updateOutfit(weather) {
-      if (debug) {console.log("entered updateOufit")}
-      Object.keys(outfit).forEach(piece => {
-        updateClothing(piece,"hot");});
     }
 
     /*
-    Purpose: Updates images to reflect current outfit piece
+    Purpose: Updates mannequinn images to reflect mannequinnOutfit piece
     Input: NONE
     Return: VOID
     */
     function updateOutfitImage(){
-      Object.keys(outfit).forEach(piece => {
-        const clothingItem = outfit[piece];
-        const element = document.getElementById(piece);
-
-        if (clothingItem && clothingItem.path) {
-          element.innerHTML = "image!";
-        } else {
-          element.innerHTML = "(no image)";
-        }
-      });
+      console.log("mannequinnOutift:",mannequinOutfit)
+      for (const piece of Object.keys(mannequinOutfit)){
+        document.getElementById(piece).innerHTML = mannequinOutfit[piece].id;
+      }
     }
   
   </script>
