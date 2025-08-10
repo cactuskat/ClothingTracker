@@ -4,14 +4,65 @@
   <title>Cher's Closet</title>
 </head>
 <body>
-<button id="generateBtn" type="button" onclick="createOutfit()">Generate!</button>
-<p id="top"></p>
-<p id="bottom"></p>
-<script>
-    function createOutfit() {
-        document.getElementById("top").innerHTML = "top!"
-        document.getElementById("bottom").innerHTML = "bottom!"
+
+  <button id="createBtn" type="button">Create!</button>
+  <p id="top"></p>
+  <p id="bottom"></p>
+
+  <script>
+    // Classes ---
+    class Outfit {
+      constructor(top, bottom, accessory){
+        this.top = top; 
+        this.bottom = bottom;
+        this.accessory = accessory;
+      }
+      updateItem(type, id) {
+        this[type] = id;
+      }
     }
-</script>
+
+    // Global Variables ---
+    const outfit = new Outfit;
+    const createBtn = document.getElementById("createBtn")
+
+    // Methods ---    
+    createBtn.addEventListener("click",updateOutfit)
+    createBtn.addEventListener("click",updateOutfitImage)
+
+    // Function ---
+    /*
+    Purpose: Selects an article from the database accoriding to the weather
+      & updates the id
+    Input: Article (prop of outfit), Weather (temp of user)
+    Return: VOID
+    */
+    function updateArticle(article,weather) {
+      outfit.updateItem(article,article)
+    }
+
+    /*
+    Purpose: Updates outfit with new articles according to the weather
+    Input: Weather(temp of user)
+    Return: VOID
+    */
+    async function updateOutfit(weather) {
+      Object.keys(outfit).forEach(article => {
+        updateArticle(article,"hot")
+      })
+    }
+
+    /*
+    Purpose: Updates images to reflect current outfit articles
+    Input: NONE
+    Return: VOID
+    */
+    function updateOutfitImage(){
+      Object.keys(outfit).forEach(article => {
+        document.getElementById(article).innerHTML = article
+      })
+    }
+  
+  </script>
 </body>
 </html>
