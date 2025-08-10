@@ -41,7 +41,11 @@
       await updateMannequinOutfit(); updateOutfitImage();});
 
     // Functions ---
-
+    /*
+    Purpose: Fetches a clothing from closet_list.db
+    Input: clothingType,Weather(temp of user)
+    Return: clothing object data
+    */
 
     /*
     Purpose: Fetches a clothing from closet_list.db
@@ -64,6 +68,8 @@
     }
 
     /*
+    Purpose: Creates an outfit according to the weather & accessory choice
+    Input: Weather(temp of user,string)
     Purpose: Creates an outfit according to the weather & accessory choice
     Input: Weather(temp of user,string)
     Return: VOID
@@ -93,8 +99,35 @@
       if (debug) console.log("Created outfit:",outfit)
       return outfit;
     }
+    async function createOutfit(weather){
+      const outfit = new Outfit();
+      isAccessoryActive = document.getElementById("accessoryBtn").checked;
+
+      for (const clothingType of Object.keys(outfit)) {
+        if (!isAccessoryActive && clothingType === "accessory") {continue;} 
+        const clothingWeather = (isAccessoryActive && clothingType === "accessory") ? "all" : weather;
+        const response = await fetchClothing(clothingType,clothingWeather);
+        if (!response){
+          console.log(`No data returned from fetchClothing(${clothingType},${clothingWeather})`);
+        } else if (response.error){
+          console.log("Error from backend:",response.error)
+        }
+
+       outfit[clothingType] = new Clothing({
+        id:response.id,
+        name:response.name,
+        type:clothingType,
+        weather:clothingWeather,
+        path:response.path})
+      }
+
+      if (debug) console.log("Created outfit:",outfit)
+      return outfit;
+    }
 
     /*
+    Purpose: Updates mannequin outfit with new pieces according to the weather
+    Input: Weather(temp of user,string)
     Purpose: Updates mannequin outfit with new pieces according to the weather
     Input: Weather(temp of user,string)
     Return: VOID
@@ -102,13 +135,33 @@
     async function updateMannequinOutfit(weather) {
       mannequinOutfit = await createOutfit("hot")
       if (debug) console.log("Dressed mannequin:",mannequinOutfit)
+    async function updateMannequinOutfit(weather) {
+      mannequinOutfit = await createOutfit("hot")
+      if (debug) console.log("Dressed mannequin:",mannequinOutfit)
     }
 
     /*
     Purpose: Updates mannequinn images to reflect mannequinnOutfit.
+    Purpose: Updates mannequinn images to reflect mannequinnOutfit.
     Input: NONE
     Return: VOID
     */
+    function updateOutfitImage(){   
+      for (const clothingType of Object.keys(mannequinOutfit)){ 
+        const element = document.getElementById(clothingType);
+        if (!element) {continue;}
+        
+        const item = mannequinOutfit[clothingType];
+
+        if (item && item.path) {
+          element.src = "/static/" +  item.path;
+          element.alt = item.name;
+          if (debug) {console.log("Image Mannequinn:",clothingType)}
+          continue;
+        }
+        element.src = "/static/imgs/Placeholders/blank.png";
+        element.alt = "blank"
+      }
     function updateOutfitImage(){   
       for (const clothingType of Object.keys(mannequinOutfit)){ 
         const element = document.getElementById(clothingType);
