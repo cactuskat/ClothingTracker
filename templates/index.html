@@ -6,8 +6,8 @@
 <body>
 
   <button id="createBtn" type="button">Create!</button>
-  <p id="top"></p>
-  <p id="bottom"></p>
+  <img id="top" width="100px" height="100px">
+  <img id="bottom" width="100px" height="100px">
 
   <script>
     const debug = 1;
@@ -67,7 +67,7 @@
     */
     async function updateManOutfit(weather) {
       for (const piece of Object.keys(mannequinOutfit)) {
-        let response = await fetchClothing(piece,"hot");
+        let response = await fetchClothing(piece,"cold");
         if (!response){
           console.log(`No data returned from fetchClothing(${clothingType},"hot")`);
         } else if (response.error){
@@ -75,7 +75,9 @@
         }
 
         mannequinOutfit[piece].id = response.id;
+        mannequinOutfit[piece].name = response.name;
         mannequinOutfit[piece].path = response.path;
+
         if (debug) {console.log(`updated Mannequin Out with ${piece}:${mannequinOutfit[piece].id}`);}
       }
     }
@@ -86,15 +88,12 @@
     Return: VOID
     */
     function updateOutfitImage(){
-      console.log("mannequinnOutift:",mannequinOutfit)
-      try {      
-        for (const piece of Object.keys(mannequinOutfit)){
-          document.getElementById(piece).innerHTML = mannequinOutfit[piece].path;
-        }
-      } catch{
-        console.log("error dressing mannequinn")
+      console.log("mannequinnOutift:",mannequinOutfit)    
+      for (const piece of Object.keys(mannequinOutfit)){
+        fullpath = "/static/" +  mannequinOutfit[piece].path;
+        document.getElementById(piece).src = fullpath;
+        document.getElementById(piece).alt = mannequinOutfit[piece].name;
       }
-
     }
   
   </script>
