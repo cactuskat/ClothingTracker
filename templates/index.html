@@ -5,16 +5,24 @@
 </head>
 <body>
 
-  <input id="accessoryBtn" type="checkbox" value="addAccessory"/>
-  <label for="accessoryBtn">Accessory?</label>
-  <button id="createBtn" type="button">Create!</button>
+  <form id="outfitForm">
+    <label for="zipcode">Zipcode:</label>
+     <input id="zipcode" type="text">
+    <!---<input id="zipcode" type="text" maxlength="5" pattern="\d{5}" title="5 digits" required>--->
+    <br>
+    <input id="accessoryBtn" type="checkbox" value="addAccessory"/>
+    <label for="accessoryBtn">Accessory?</label>
+    <button id="createBtn" type="submit">Create!</button>
+  </form>
   <br><br>
   <img id="top" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
   <img id="bottom" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
   <img id="accessory" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
+  <p id="weatherBox"></p>
 
   <script>
     const debug = 1;
+
     // Classes ---
     class Clothing {
       constructor({id=null,name=null,type=null,weather=null,path=null} = {}){
@@ -35,41 +43,90 @@
     // Global Variables ---
     var mannequinOutfit = new Outfit();
     const createBtn = document.getElementById("createBtn");
+    const form = document.getElementById("outfitForm")
 
     // Methods ---    
-    createBtn.addEventListener("click",async () => {
-      await updateMannequinOutfit(); updateOutfitImage();});
+    form.addEventListener("submit",async(event) => {
+      event.preventDefault();
+      await updateMannequinOutfit();
+      updateOutfitImage();
+    })
 
     // Functions ---
+    /*
+    Purpose: Fetches weather condition based on console location or input zipcode
+    Input: NONE
+    Return: hot(>=75), mid(74-60), cold(<= 60)
+    */
+    async function fetchWeather() {
+      let query;
+        try {
+          const zipcodeTextbox = document.getElementById("zipcode")
+          if(!zipcodeTextbox) {throw new Error("fetchWeather Error: no zipcode textbox")}
+          
+          if (zipcodeTextbox.value.trim().length > 0)
+          {
+            const zipcode = zipcodeTextbox.value.trim();
+            query = `/weather/get/today?zipcode=${zipcode}`;
+            if (debug) {console.log(`Zipcode:${zipcode})`);} 
+          } else {
+            const position = await new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve,reject);});
+            const lon = position.coords.longitude;
+            const lat = position.coords.latitude;
+            query = `/weather/get/today?lat=${lat}&lon=${lon}`
+            if (debug) {console.log(`Coords:(${lat},${lon})`)}
+          }
 
+          const response = await fetch(query);
+          if (!response.ok) { throw new Error(`Fetch error: ${response.status}`);}
+
+          const result = await response.json();
+          if (debug) {console.log('fetchWeather JSON data :',result);}
+
+          const temp = result.temp;
+          if (debug) {console.log("Temp:",temp)}
+          if (temp >= 75){
+            return "hot";
+          } else if (temp <= 60){
+            return "cold";
+          } else {
+            return "mid";
+          }
+        } catch (error) {
+          console.error(error.message);
+          return null;
+        }
+      }
+      
     /*
     Purpose: Fetches a clothing from closet_list.db
-    Input: clothingType,Weather(temp of user)
+    Input: clothingType (clothing object type), Weather(temp of user)
     Return: clothing object data
     */
     async function fetchClothing(clothingType,weather){
-      if (debug) {console.log(`Entering fetchClothing with ${clothingType} & ${weather}`)}
+      if (debug) {console.log(`fetchClothing with ${clothingType} & ${weather}`)}
       try {
         const response = await fetch(`/clothing/search?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
-        if (!response.ok) {
-          throw new Error(`Fetch error: ${response.status}`);
-        }
+        if (!response.ok) { throw new Error(`Fetch error: ${response.status}`);}
         const result = await response.json();
-        if (debug) {console.log('Parsed JSON data:',result);}
+        if (debug) {console.log('fetchClothing JSON data:',result);}
         return result;
       } catch (error) {
         console.error(error.message);
-        return null;}
+        return null;
+      }
     }
 
     /*
     Purpose: Creates an outfit according to the weather & accessory choice
-    Input: Weather(temp of user,string)
+    Input: NONE
     Return: VOID
     */
-    async function createOutfit(weather){
+    async function createOutfit(){
       const outfit = new Outfit();
       isAccessoryActive = document.getElementById("accessoryBtn").checked;
+      weather = await fetchWeather();
 
       for (const clothingType of Object.keys(outfit)) {
         if (!isAccessoryActive && clothingType === "accessory") {continue;} 
@@ -95,11 +152,11 @@
 
     /*
     Purpose: Updates mannequin outfit with new pieces according to the weather
-    Input: Weather(temp of user,string)
+    Input: NONE
     Return: VOID
     */
     async function updateMannequinOutfit(weather) {
-      mannequinOutfit = await createOutfit("hot");
+      mannequinOutfit = await createOutfit();
       if (debug) console.log("Dressed mannequin:",mannequinOutfit);
     }
 
@@ -121,6 +178,7 @@
           if (debug) {console.log("Image Mannequinn:",clothingType);}
           continue;
         }
+        // if no image or item if found, a placeholder will be placed
         element.src = "/static/imgs/Placeholders/blank.png";
         element.alt = "blank";
       }
