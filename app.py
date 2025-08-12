@@ -9,6 +9,9 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+#Purpose: selects a clothing from closet_list.db
+#Param: type(string) & weather(string)
+#Return: clothing object properties
 @app.route("/clothing/search")
 def search_clothing():
     type_param = request.args.get("type")
@@ -16,7 +19,6 @@ def search_clothing():
     if not type_param or not weather_param:
         return jsonify({"error": "Missing type_param or weather_param"})
     print(f"Recieved type: {type_param}, weather:{weather_param}")
-    #print("hello world")
     query = "SELECT id,name,img_path FROM closet WHERE type = ? AND weather = ? ORDER BY RANDOM() LIMIT 1"
     params = (type_param,weather_param)
 
@@ -35,8 +37,10 @@ def search_clothing():
     except Exception as e:
         return jsonify({"error": "error searching closet_list.db"})
     
-
-@app.route("/weather/get/today")
+#Purpose:connects to OpenWeather API to get the temperature
+#Param: (lat(int) & lon(int)) OR (zipcode(int))
+#Return: Temp(int) in F
+@app.route("/weather/get")
 def get_temperature():
     #weather_api_key = os.getenv("OPENWEATHER_API_KEY")
     #demo key from publicly provided by geeksforgeeks is used so
@@ -66,8 +70,6 @@ def get_temperature():
             return jsonify({"error": f"Openweather returned: {response.status_code}"})
     except Exception as e:
         return jsonify({"error": "error fetching data from OpenWeather API"})
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
