@@ -18,12 +18,15 @@ class Outfit {
 }
 
 // === Global Variables ===
-
+let isAccessoryActive;
 
 // === DOM Functions ===  
-document.getElementById("outfitForm").addEventListener("submit",async(event) => {
+document.getElementById("outfitCreatorForm").addEventListener("submit",async(event) => {
     event.preventDefault();
     await updateMannequin();
+})
+document.getElementById("accessoryBtn").accessKeyLabel("click", function () {
+
 })
 
 
@@ -38,7 +41,7 @@ async function fetchWeather() {
     let query;
     try {
         // Determine location
-        const zipcodeTextbox = document.getElementById("zipcode");
+        const zipcodeTextbox = document.getElementById("zipcodeTextbox");
         if(!zipcodeTextbox) {throw new Error("fetchWeather Error: no zipcode textbox");}
 
         if (zipcodeTextbox.value.trim().length > 0)
