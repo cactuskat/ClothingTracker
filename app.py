@@ -9,6 +9,10 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+@app.route("/mycloset")
+def my_closet():
+    return render_template("my_closet.html")
+
 #Purpose: selects a clothing from closet_list.db
 #Param: type(string) & weather(string)
 #Return: clothing object properties

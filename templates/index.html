@@ -2,120 +2,26 @@
 <html>
 <head>
   <title>Cher's Closet</title>
-  <style>
-    body {
-      background-color: #D3AEF4;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    .navBar {
-      align-items: center;
-      background-color: #333;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-bottom: 20px;
-      overflow: hidden;
-      padding: 3px 15px;
-      width: 100%;
-    }
-    .navBar p {
-      color: #f2f2f2;
-      text-align: center;
-      padding: 1px 10px;
-      text-decoration: none;
-      font-size: 17px;
-    }
-    .outfitImg {
-      border: 3px solid black;
-      border-radius: 8px;
-      box-sizing: border-box;
-    }
-    #accessoryBtn {
-      background-color: #FCE27C;
-      border: 3px solid #ccc;
-      border-color: black;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: cursive;
-      font-size: 25px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    #createBtn {
-      background-color: #FE6CC4;
-      border: 3px solid #ccc;
-      border-color: black;
-      border-radius: 8px;
-      color: #FED3DF;
-      cursor: pointer;
-      font-family: cursive;
-      font-size: 48px;
-      font-weight: bold;
-      text-shadow: -2px -2px 0 black,
-        2px -2px 0 black,
-        -2px 2px 0 black,
-        2px 2px 0 black;;
-    }
-    #mainDiv {
-      align-items: center;
-      background-color: #FEE3AB;
-      border: 3px solid #ccc;
-      border-color: black;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      font-family: cursive;
-      margin: 20px auto 0;
-      max-width: 400px;
-      min-width: 300px;
-      padding: 20px;
-    }
-    #outfitCreatorForm {
-      margin-bottom: 20px;
-      text-align: center;
-      width: 100%;
-    }
-    #zipcodeTextbox{
-      border: 3px solid black;
-      border-color: black;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 20px;
-      margin-bottom: 10px;
-      padding: 5px 3px;
-    }
-    #mainDiv label {
-      background-color: #52E2E9;
-      border: 3px solid black;
-      border-color: black;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      padding: 8px 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
   <div class="navBar">
-    <p>Home</p>
-    <p>My Closet</p>
+    <a href="/">Home</a>
+    <a href="/mycloset">My Closet</a>
   </div>
+  {% block body %}
   <div id="mainDiv" class="mainDivClass">
     <form id="outfitCreatorForm">
-      <label for="zipcode">zipcode</label>
-      <input id="zipcodeTextbox" type="text">
+      <h1>Placeholder Name</h1>
+      <p>Enter in a zipcode, choose your style, and create an outfit!</p>
+      <input id="zipcodeTextbox" type="text" placeholder="zipcode">
       <!---<input id="zipcode" type="text" maxlength="5" pattern="\d{5}" title="5 digits" required>--->
       <br>
       <!---<input id="accessoryBtn" type="checkbox" value="addAccessory"/>
       <label for="accessoryBtn">Accessory?</label>--->
       <button id="accessoryBtn" type="button">accessory</button>
       <br>
-      <button id="createBtn" type="submit">CREATE!</button>
+      <button id="createBtn" type="submit">STYLE ME</button>
     </form>
   <div id="imageDiv">
     <img id="top" class="outfitImg" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
@@ -124,7 +30,7 @@
   </div>
   <p>Blurb TBA</p>
   </div>
-
+  {% endblock %}
   <script src="/static/js/main.js"></script>
 </body>
 </html>

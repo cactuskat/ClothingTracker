@@ -1,0 +1,103 @@
+body {
+  background: url('/static/imgs/Backgrounds/houndstooth.png') repeat;
+  background-size: 200px 200px; 
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+}
+.mainDivClass {
+  background-color: #F8EFDF;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 2rem auto;
+  max-width: 400px;
+  padding: 2rem;
+  text-align: center;
+}
+.mainDivClass input[type=text] {
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  padding: 0.5rem;
+  width: 100%;
+}
+.mainDivClass p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+.navBar {
+  background-color: #333;
+  color: white;
+  display: flex;
+  font-family: 'Montserrat', sans-serif;
+  gap: 2rem;
+  justify-content: center;
+  padding: 1rem;
+  text-decoration: none;
+}
+.navBar a:link{
+  text-decoration: none;
+}
+.navBar a:visited {
+  color: white;
+  text-decoration: none;
+}
+.navBar a:hover {
+  color: darkgray;
+  text-decoration: underline;
+}
+.outfitImg {
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: white;
+  gap: 1rem;
+  justify-content: center;
+}
+#accessoryBtn {
+  background-color: #f3e7cb;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.9rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+}
+#accessoryBtn:hover {
+  background-color: #e6d9b7;
+}
+#accessoryBtn[aria-pressed="true"] {
+  background-color: #897850;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.9rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+}
+#createBtn {
+  background-color: #d08b7e;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem 2rem;
+}
+#createBtn:hover {
+  background-color: #b67466;
+}

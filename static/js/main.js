@@ -18,15 +18,18 @@ class Outfit {
 }
 
 // === Global Variables ===
-let isAccessoryActive;
+let isAccessoryActive = true;
 
 // === DOM Functions ===  
 document.getElementById("outfitCreatorForm").addEventListener("submit",async(event) => {
     event.preventDefault();
     await updateMannequin();
 })
-document.getElementById("accessoryBtn").accessKeyLabel("click", function () {
-
+accessoryBtn = document.getElementById("accessoryBtn");
+accessoryBtn.addEventListener("click", function () {
+    isAccessoryActive = !isAccessoryActive;
+    accessoryBtn.setAttribute("aria-pressed",!isAccessoryActive);
+    if (debug) {console.log("Accessory?:",isAccessoryActive);}
 })
 
 
@@ -89,7 +92,7 @@ Return: VOID
 */
 async function createOutfit(){
     const outfit = new Outfit();
-    isAccessoryActive = document.getElementById("accessoryBtn").checked;
+    //isAccessoryActive = document.getElementById("accessoryBtn").checked;
     weather = await fetchWeather();
 
     for (const clothingType of Object.keys(outfit)) {
