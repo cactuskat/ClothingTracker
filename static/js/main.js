@@ -23,7 +23,7 @@ let isAccessoryActive = true;
 // === DOM Functions ===  
 document.getElementById("outfitCreatorForm").addEventListener("submit",async(event) => {
     event.preventDefault();
-    await updateMannequin();
+    await updateOutfitImage();
 })
 accessoryBtn = document.getElementById("accessoryBtn");
 accessoryBtn.addEventListener("click", function () {
@@ -84,7 +84,7 @@ async function fetchWeather() {
     }
 }
   
-// === Outfit Handling ===
+// === Outfit/Clothing Handling ===
 /*
 Purpose: Creates an outfit according to the weather & accessory choice
 Input: NONE
@@ -98,7 +98,7 @@ async function createOutfit(){
     for (const clothingType of Object.keys(outfit)) {
     if (!isAccessoryActive && clothingType === "accessory") {continue;} 
     const clothingWeather = (isAccessoryActive && clothingType === "accessory") ? "all" : weather;
-    const response = await fetchClothing(clothingType,clothingWeather);
+    const response = await fetchClothingWeather(clothingType,clothingWeather);
     if (!response){
         console.log(`No data returned from fetchClothing(${clothingType},${clothingWeather})`);
     } else if (response.error){
@@ -118,17 +118,17 @@ async function createOutfit(){
 }
 
 /*
-Purpose: Fetches a clothing from closet_list.db
-Input: clothingType (clothing object type), Weather(temp of user)
+Purpose: Fetches all clothing from closet_list.db depending on type
+Input: clothingType (clothing object type)
 Return: clothing object data
 */
-async function fetchClothing(clothingType,weather){
-    if (debug) {console.log(`fetchClothing with ${clothingType} & ${weather}`)}
+async function fetchClothingType(clothingType){
+    if (debug) {console.log(`fetchClothingType with ${clothingType}`)}
     try {
-    const response = await fetch(`/clothing/search?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
+    const response = await fetch(`/clothing/search/all?type=${encodeURIComponent(clothingType)}`);
     if (!response.ok) { throw new Error(`Fetch error: ${response.status}`);}
     const result = await response.json();
-    if (debug) {console.log('fetchClothing JSON data:',result);}
+    if (debug) {console.log('fetchClothingType JSON data:',result);}
     return result;
     } catch (error) {
     console.error(error.message);
@@ -137,11 +137,33 @@ async function fetchClothing(clothingType,weather){
 }
 
 /*
+Purpose: Fetches a clothing from closet_list.db depending on weather & type
+Input: clothingType (clothing object type), Weather(temp of user)
+Return: clothing object data
+*/
+async function fetchClothingWeather(clothingType,weather){
+    if (debug) {console.log(`fetchClothingWeather with ${clothingType} & ${weather}`)}
+    try {
+    const response = await fetch(`/clothing/search/weather?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
+    if (!response.ok) { throw new Error(`Fetch error: ${response.status}`);}
+    const result = await response.json();
+    if (debug) {console.log('fetchClothingWeather JSON data:',result);}
+    return result;
+    } catch (error) {
+    console.error(error.message);
+    return null;
+    }
+}
+
+
+
+// === Outfit Generator ===
+/*
 Purpose: Displays generated outfit
 Input: NONE
 Return: VOID
 */
-async function updateMannequin(){   
+async function updateOutfitImage(){   
     //Generates an outfit
     const mannequinOutfit = await createOutfit();
     if (debug) console.log("Dressed mannequin:",mannequinOutfit);

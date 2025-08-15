@@ -13,19 +13,53 @@ def home():
 def my_closet():
     return render_template("my_closet.html")
 
-#Purpose: selects a clothing from closet_list.db
-#Param: type(string) & weather(string)
+#Purpose: selects all clothing from closet_list.db based on type
+#Param: type(string)
 #Return: clothing object properties
-@app.route("/clothing/search")
-def search_clothing():
+@app.route("/clothing/search/type")
+def search_clothing_type():
     type_param = request.args.get("type")
-    weather_param = request.args.get("weather")
-    if not type_param or not weather_param:
-        return jsonify({"error": "Missing type_param or weather_param"})
-    print(f"Recieved type: {type_param}, weather:{weather_param}")
-    query = "SELECT id,name,img_path FROM closet WHERE type = ? AND weather = ? ORDER BY RANDOM() LIMIT 1"
-    params = (type_param,weather_param)
+    if not type_param:
+        return jsonify({"error": "Missing type_param"})
+    print(f"Recieved type: {type_param}")
+    query = "SELECT id,name,img_path FROM closet WHERE type = ?"
+    params = (type_param)
 
+    try:
+        conn = sqlite3.connect("closet_list.db")
+        cursor = conn.cursor()
+        result = cursor.execute(query, params).fetchall()
+        conn.close()
+        print(f"Query result: {result}")
+        if not result:
+            return jsonify({"error" : "no clothing found"})
+        
+        clothing_list = [
+            {"id":row[0],"name": row[1], "path": row[2]}
+            for row in result
+        ]
+        return jsonify(clothing_list)
+    except Exception as e:
+        return jsonify({"error": "error searching closet_list.db"})
+
+#Purpose: selects a clothing from closet_list.db
+#Param: type(string) (optional: weather(string))
+#Return: clothing object properties
+@app.route("/clothing/search/weather")
+def search_clothing_weather():
+    type_param = request.args.get("type")
+    if not type_param:
+        return jsonify({"error": "Missing type_param or weather_param"})
+    query = "SELECT id,name,img_path FROM closet WHERE type = :type"
+    params = {"type": type_param}
+
+    weather_param = request.args.get("weather")
+    if weather_param:
+        query += " AND (weather = :weather OR weather = 'ALL')"
+        params["weather"] = weather_param 
+
+    query += " ORDER BY RANDOM() LIMIT 1"
+    
     try:
         conn = sqlite3.connect("closet_list.db")
         cursor = conn.cursor()
