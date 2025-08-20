@@ -1,13 +1,24 @@
 {% extends 'index.html' %}
 {% block body %}    
-<div id="closetDiv" class="mainDivClass">
+<div id="closetDiv" class="card">
     <h1>Closet</h1>
     <h3>Tops</h3>
-    <div class="scroll-container">
-        <img src="/static/imgs/Placeholders/blank.png">
-        <img src="/static/imgs/Placeholders/blank.png">
+    <div class="card_imgGallery">
+        {% for img in tops %}
+        <img class="card_img--small--link" src="{{ img }}">
+        {% endfor %}
     </div>
     <h3>Bottoms</h3>
+    <div class="scroll-container">
+        {% for img in bottoms %}
+        <img class="card_img--small--link" src="{{ img }}">
+        {% endfor %}
+    </div>
     <h3>Accessorys</h3>
+    <div class="scroll-container">
+        {% for img in accessorys %}
+        <img class="card_img--small--link" src="{{ img }}">
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

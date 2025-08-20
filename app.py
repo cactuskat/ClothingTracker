@@ -11,20 +11,30 @@ def home():
 
 @app.route("/mycloset")
 def my_closet():
-    return render_template("my_closet.html")
+    tops = search_clothing_type("top")
+    bottoms = search_clothing_type("bottom")
+    accessorys = search_clothing_type("accessory")
+    return render_template("my_closet.html",tops=tops,bottoms=bottoms,accessorys=accessorys)
 
 #Purpose: selects all clothing from closet_list.db based on type
 #Param: type(string)
 #Return: clothing object properties
-@app.route("/clothing/search/type")
-def search_clothing_type():
-    type_param = request.args.get("type")
-    if not type_param:
-        return jsonify({"error": "Missing type_param"})
-    print(f"Recieved type: {type_param}")
-    query = "SELECT id,name,img_path FROM closet WHERE type = ?"
-    params = (type_param)
+def search_clothing_type(type_param):
+    conn = sqlite3.connect("closet_list.db")
+    cursor = conn.cursor()
+    result = cursor.execute("SELECT img_path FROM closet WHERE type = :type",{"type": type_param}).fetchall()
+    clothing_list = [("/static/"+ row[0]) for row in result]
+    conn.close()
+    return clothing_list
 
+'''
+    print(f"Recieved type: {type_param}")
+    query = "SELECT img_path FROM closet WHERE type = ?"
+    params = (type_param)
+    conn = sqlite3.connect("closet_list.db")
+    cursor = conn.cursor()
+    result = cursor.execute(query, params).fetchall()
+    conn.close()
     try:
         conn = sqlite3.connect("closet_list.db")
         cursor = conn.cursor()
@@ -41,12 +51,15 @@ def search_clothing_type():
         return jsonify(clothing_list)
     except Exception as e:
         return jsonify({"error": "error searching closet_list.db"})
+'''
 
-#Purpose: selects a clothing from closet_list.db
+
+
+#Purpose: selects a clothing from closet_list.db randomly
 #Param: type(string) (optional: weather(string))
 #Return: clothing object properties
-@app.route("/clothing/search/weather")
-def search_clothing_weather():
+@app.route("/clothing/search/random")
+def search_clothing_random():
     type_param = request.args.get("type")
     if not type_param:
         return jsonify({"error": "Missing type_param or weather_param"})

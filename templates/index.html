@@ -1,36 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
+
+
 <head>
+  <meta charset="UTF-8" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cher's Closet</title>
-  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/static/css/styles.css" />
 </head>
+
+
 <body>
-  <div class="navBar">
-    <a href="/">Home</a>
-    <a href="/mycloset">My Closet</a>
+
+  <div class="nav">
+    <a href="/" class="nav_link">Home</a>
+    <a href="/mycloset" class="nav_link">My Closet</a>
   </div>
+
+
   {% block body %}
-  <div id="mainDiv" class="mainDivClass">
+  <div class="card">
+
     <form id="outfitCreatorForm">
-      <h1>Placeholder Name</h1>
-      <p>Enter in a zipcode, choose your style, and create an outfit!</p>
-      <input id="zipcodeTextbox" type="text" placeholder="zipcode">
+      <h1>Dress to Impress!</h1>
+      <p class="card_text">Enter in a zipcode, choose your style, and let's create an outfit!</p>
+      <input id="zipcodeTextbox" type="text" placeholder="zipcode" class="card_input" />
       <!---<input id="zipcode" type="text" maxlength="5" pattern="\d{5}" title="5 digits" required>--->
       <br>
       <!---<input id="accessoryBtn" type="checkbox" value="addAccessory"/>
       <label for="accessoryBtn">Accessory?</label>--->
-      <button id="accessoryBtn" type="button">accessory</button>
+      <button id="accessoryBtn" type="button" class="card_btn--yellow">accessory</button>
       <br>
-      <button id="createBtn" type="submit">STYLE ME</button>
+      <button id="createBtn" type="submit" class="card_btn--pink">STYLE ME</button>
     </form>
-  <div id="imageDiv">
-    <img id="top" class="outfitImg" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
-    <img id="bottom" class="outfitImg" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
-    <img id="accessory" class="outfitImg" width="100px" height="100px" src="/static/imgs/Placeholders/blank.png">
-  </div>
-  <p>Blurb TBA</p>
+
+    <div id="imageDiv">
+      <img id="outfit_top_img" class="card_img--small" />
+      <img id="outfit_bottom_img" class="card_img--small" />
+      <img id="outfit_accessory_img" class="card_img--small" />
+    </div>
+
+  <p class="card_text">Blurb TBA</p>
+
   </div>
   {% endblock %}
+
+
   <script src="/static/js/main.js"></script>
+
 </body>
 </html>

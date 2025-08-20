@@ -144,7 +144,7 @@ Return: clothing object data
 async function fetchClothingWeather(clothingType,weather){
     if (debug) {console.log(`fetchClothingWeather with ${clothingType} & ${weather}`)}
     try {
-    const response = await fetch(`/clothing/search/weather?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
+    const response = await fetch(`/clothing/search/random?type=${encodeURIComponent(clothingType)}&weather=${encodeURIComponent(weather)}`);
     if (!response.ok) { throw new Error(`Fetch error: ${response.status}`);}
     const result = await response.json();
     if (debug) {console.log('fetchClothingWeather JSON data:',result);}
@@ -170,20 +170,21 @@ async function updateOutfitImage(){
 
     // Update Image of generated outfit
     for (const clothingType of Object.keys(mannequinOutfit)){ 
-    const element = document.getElementById(clothingType);
-    if (!element) {continue;}
-    
-    const item = mannequinOutfit[clothingType];
+        const element_name = "outfit_" + clothingType + "_img"
+        const element = document.getElementById(element_name);
+        if (!element) {continue;}
+        
+        const item = mannequinOutfit[clothingType];
 
-    if (item && item.path) {
-        element.src = "/static/" +  item.path;
-        element.alt = item.name;
-        if (debug) {console.log("Image Mannequinn:",clothingType);}
-        continue;
-    }
-    // if no image or item if found, a placeholder will be placed
-    element.src = "/static/imgs/Placeholders/blank.png";
-    element.alt = "blank";
+        if (item && item.path) {
+            element.src = "/static/" +  item.path;
+            element.alt = item.name;
+            if (debug) {console.log("Image Mannequinn:",clothingType);}
+            continue;
+        }
+        // if no image or item if found, a placeholder will be placed
+        element.src = "/static/imgs/Placeholders/blank.png";
+        element.alt = "blank";
     }
 }
 

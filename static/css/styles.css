@@ -4,7 +4,9 @@ body {
   font-family: 'Playfair Display', serif;
   margin: 0;
 }
-.mainDivClass {
+
+
+.card {
   background-color: #F8EFDF;
   border: 1px solid #333;
   border-radius: 8px;
@@ -14,49 +16,8 @@ body {
   padding: 2rem;
   text-align: center;
 }
-.mainDivClass input[type=text] {
-  border: 1px solid #333;
-  border-radius: 4px;
-  font-size: 1rem;
-  font-family: 'Montserrat', sans-serif;
-  text-align: center;
-  padding: 0.5rem;
-  width: 100%;
-}
-.mainDivClass p {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
-  color: #555;
-}
-.navBar {
-  background-color: #333;
-  color: white;
-  display: flex;
-  font-family: 'Montserrat', sans-serif;
-  gap: 2rem;
-  justify-content: center;
-  padding: 1rem;
-  text-decoration: none;
-}
-.navBar a:link{
-  text-decoration: none;
-}
-.navBar a:visited {
-  color: white;
-  text-decoration: none;
-}
-.navBar a:hover {
-  color: darkgray;
-  text-decoration: underline;
-}
-.outfitImg {
-  border: 1px solid #333;
-  border-radius: 4px;
-  background-color: white;
-  gap: 1rem;
-  justify-content: center;
-}
-#accessoryBtn {
+
+.card_btn--yellow{
   background-color: #f3e7cb;
   border: 1px solid #333;
   border-radius: 4px;
@@ -68,10 +29,10 @@ body {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
 }
-#accessoryBtn:hover {
+.card_btn--yellow:hover{
   background-color: #e6d9b7;
 }
-#accessoryBtn[aria-pressed="true"] {
+.card_btn--yellow[aria-pressed="true"] {
   background-color: #897850;
   border: 1px solid #333;
   border-radius: 4px;
@@ -83,7 +44,8 @@ body {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
 }
-#createBtn {
+
+.card_btn--pink {
   background-color: #d08b7e;
   border: 1px solid #333;
   border-radius: 4px;
@@ -98,6 +60,93 @@ body {
   margin-bottom: 1rem;
   padding: 0.8rem 2rem;
 }
-#createBtn:hover {
+.card_btn--pink:hover {
   background-color: #b67466;
 }
+
+.card_img--small {
+  alt: "blank";
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: white;
+  gap: 1rem;
+  height: 100px;
+  justify-content: center;
+  width: 100px;
+  src: "/static/imgs/Placeholders/blank.png";
+}
+
+.card_img--small--link{
+  alt: "blank";
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: white;
+  gap: 1rem;
+  height: 100px;
+  justify-content: center;
+  width: 100px;
+  src: "/static/imgs/Placeholders/blank.png";
+}
+
+.card_img--small--link:hover {
+  filter: brightness(30%);
+}
+
+.card_imgGallery {
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #333;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+.card_input {
+  border: 1px solid #333;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.card_text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+
+.nav {
+  background-color: #333;
+  color: white;
+  display: flex;
+  font-family: 'Montserrat', sans-serif;
+  gap: 2rem;
+  justify-content: center;
+  padding: 1rem;
+  text-decoration: none;
+}
+.nav_link:link{
+  text-decoration: none;
+}
+.nav_link:visited {
+  color: white;
+  text-decoration: none;
+}
+.nav_link:hover {
+  color: darkgray;
+  text-decoration: underline;
+}
+
+
+div.scroll-container {
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #333;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+
